@@ -1,0 +1,60 @@
+<% if current_user.is_admin? %>
+  <div id ="vehicles" style="padding:10px;border:1px solid black;border-radius:5px;width:500px;background:white">
+  <table>
+    <h3>Vehicle List</h3>
+   <thead>
+    <tr>
+      <th class ="l"> vehicle Make </th>
+      <th class ="l"> vehicle number </th>
+      <th class ="l"> Driver Name </th>
+    </tr>
+    </thead>
+    <tr>
+  <% Vehicle.all.each do |v| %>
+    <tbody>
+      <td><%= link_to v.vehicle_make, v %></td>
+      <td><%= v.vehicle_number %></td>
+      <td><%= link_to v.user.name, profile_path  %></td>
+    </tbody>
+  </tr>
+ <% end %>
+</table>
+
+</div><br>
+
+<div id ="vehicles" style="padding:10px;border:1px solid black;border-radius:5px;width:500px;background:white">
+<h3> Drivers list </h3>
+  <table style ="width:200px;">
+  <tr>
+    <thead>
+      <th class="l"> Driver Name </th>
+    </thead>
+  </tr>
+
+  <tr>
+  <% User.find_all_by_profile_title('driver').each do |d| %>
+    <tbody>
+      <td><%= link_to d.name, profile_path %></td>
+    </tbody>
+    </tr>
+  <% end %>
+ </table>
+</div>
+
+<% else %>
+ <%= render "clock" %><br>
+
+<p style ="font-size:11px;color:#888888">
+ <b>Welcome ! <%= current_user.name %></b>
+
+ <%= current_user.vehicle %>
+
+</p>
+
+
+
+
+
+
+
+<% end %>

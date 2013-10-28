@@ -1,0 +1,151 @@
+<%- title @log.name -%>
+
+<%= javascript_include_tag "http://maps.google.com/maps/api/js?sensor=false" %>
+<%= javascript_include_tag "//www.google.com/jsapi" %>
+<%= javascript_include_tag "logs" %>
+
+<script>
+  google.load("visualization", "1", { packages: ["corechart"] });
+
+  google.setOnLoadCallback(function() {
+    new Tracklog.TracksFetcher("<%=j log_path(@log, :json) %>", function(tracksFetcher) {
+      new Tracklog.Map("track-map", tracksFetcher, "<%= current_user.distance_units %>");
+      new Tracklog.DistanceElevationPlot("track-distance-elevation-plot", tracksFetcher, "<%= current_user.distance_units %>");
+    });
+  });
+</script>
+
+<div id="track-header">
+  <ul>
+    <li><%= link_to "Export", log_path(@log, :format => :gpx), :class => "button" %>
+  </ul>
+
+  <h1><%= @log.name %></h1>
+</div>
+
+<div id="track-side">
+  <h3>Details</h3>
+
+  <div id="track-details" class="box">
+    <dl>
+      <dt>Start</dt>
+      <dd><%= @log.start_time ? l(@log.start_time, :format => "%d.%m.%Y %H:%M") : "—" %></dd>
+      <dt>End</dt>
+      <dd><%= @log.end_time ? l(@log.end_time, :format => "%d.%m.%Y %H:%M") : "—" %></dd>
+      <dt>Duration</dt>
+      <dd><%=format_duration @log.duration %></dd>
+      <dt>Moving</dt>
+      <dd><%=format_duration @log.moving_time %></dd>
+      <dt>Stopped</dt>
+      <dd><%=format_duration @log.stopped_time %></dd>
+    </dl>
+
+    <dl>
+      <dt>Distance</dt>
+      <dd><%=format_distance @log.distance %></dd>
+      <dt>∅ Speed</dt>
+      <dd><%=format_speed @log.overall_average_speed %></dd>
+      <dt>Mov. ∅ Speed</dt>
+      <dd><%=format_speed @log.moving_average_speed %></dd>
+      <dt>Max. Speed</dt>
+      <dd><%=format_speed @log.max_speed %></dd>
+    </dl>
+
+    <dl>
+      <dt>Ascent</dt>
+      <dd><%=format_elevation @log.ascent %></dd>
+      <dt>Descent</dt>
+      <dd><%=format_elevation @log.descent %></dd>
+      <dt>Min. Elevation</dt>
+      <dd><%=format_elevation @log.min_elevation %></dd>
+      <dt>Max. Elevation</dt>
+      <dd><%=format_elevation @log.max_elevation %></dd>
+    </dl>
+
+    <dl>
+      <dt>Tracks</dt>
+      <dd><%= @log.tracks.count %></dd>
+      <dt>Trackpoints</dt>
+      <dd><%= @log.tracks.map { |t| t.trackpoints.count }.sum %></dd>
+    </dl>
+  </div>
+
+  <h3>Tracks</h3>
+
+  <div id="log-tracks" class="box">
+    <ul>
+      <%- @log.tracks.each do |track| -%>
+        <li><%= link_to track.display_name, log_track_path(@log, track) %><br>
+          <%=l track.start_time, :format => "%d.%m.%Y %H:%M" %>,
+          <%=format_distance track.distance %>
+      <%- end -%>
+    </ul>
+  </div>
+
+  <%- if @log.tags.any? -%>
+    <h3>Tags</h3>
+
+    <div id="log-tags" class="box">
+      <ul>
+        <%- @log.tags.each do |tag| -%>
+          <li><%= link_to tag.name, tagged_logs_path(tag) %>
+        <%- end -%>
+      </ul>
+    </div>
+  <%- end -%>
+
+  <%- if @log.alternatives.size > 1 -%>
+    <h3>Alternatives</h3>
+
+    <div id="log-alternatives" class="box">
+      <ul>
+        <%- @log.alternatives.each do |log| -%>
+          <li>
+            <%- if rank = format_rank(log.rank) -%>
+              <%=raw rank %>
+            <%- end -%>
+            <%= link_to l(log.start_time, :format => "%d.%m.%Y %H:%M"), log %><br>
+            <%=format_duration log.duration %>, <%=format_distance log.distance %>
+          </li>
+        <%- end -%>
+      </ul>
+    </div>
+  <%- end -%>
+
+  <h3>Actions</h3>
+
+  <div id="track-actions" class="box">
+    <ul>
+      <li><%= link_to "Edit Tags", nil, id: "log-tags-link" %>
+      <li><%= link_to "Edit Log", edit_log_path(@log) %>
+      <li><%= link_to "Delete Log", log_path(@log), :method => :delete, :confirm => "Do you really want to delete this log and its tracks?" %>
+    </ul>
+  </div>
+</div>
+
+<div id="track-main">
+  <div id="track-map"></div>
+
+  <%- if @log.comment and not @log.comment.empty? -%>
+    <h2>Description</h2>
+
+    <div id="log-comment">
+      <%= markdown(@log.comment) %>
+    </div>
+  <%- end -%>
+
+  <h2>Elevation Profile</h2>
+  <div id="track-distance-elevation-plot"></div>
+</div>
+
+<div id="log-tags-pane" class="site-overlay">
+  <div class="box">
+    <div class="close">×</div>
+    <h2>Tags (space-separated)</h2>
+    <div class="content">
+      <%= form_for @log, method: :put, remote: true do |f| %>
+        <%= f.text_field :tags_list %>
+      <% end %>
+    </div>
+  </div>
+</div>

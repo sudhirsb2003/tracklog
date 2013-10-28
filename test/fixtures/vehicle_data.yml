@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  registration_data: MyString
+  purchase_date_and_year: 2013-10-27
+  owner_name: MyString
+  owner_address: MyText
+  vehicle_detail: MyText
+  vehicle_id: 1
+
+two:
+  registration_data: MyString
+  purchase_date_and_year: 2013-10-27
+  owner_name: MyString
+  owner_address: MyText
+  vehicle_detail: MyText
+  vehicle_id: 1

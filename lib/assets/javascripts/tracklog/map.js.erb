@@ -1,0 +1,150 @@
+Tracklog.MapPopupOverlay = function(options) {
+  this.map           = options.map;
+  this.distanceUnits = options.distanceUnits;
+
+  this.setMap(this.map);
+};
+
+Tracklog.MapPopupOverlay.prototype = new google.maps.OverlayView();
+Tracklog.MapPopupOverlay.prototype.draw = function() {};
+
+Tracklog.MapPopupOverlay.prototype.onAdd = function() {
+  var html = '<div id="map-popup"> \
+      <dl> \
+        <dt>Time</dt> \
+        <dd class="time"></dd> \
+        <dt>Distance</dt> \
+        <dd class="distance"></dd> \
+        <dt>Speed</dt> \
+        <dd class="speed"></dd> \
+        <dt>Elevation</dt> \
+        <dd class="elevation"></dd> \
+      </dl> \
+    </div>';
+
+  this.div = $(html);
+  $(this.getPanes().floatPane).append(this.div);
+};
+
+Tracklog.MapPopupOverlay.prototype.onRemove = function() {
+  this.div.remove();
+  this.div = null;
+};
+
+Tracklog.MapPopupOverlay.prototype.setPosition = function(latlng, segment, distance) {
+  var overlayProjection = this.getProjection();
+  var coords = overlayProjection.fromLatLngToDivPixel(latlng);
+
+  this.div.find(".time").text(segment.start.time);
+
+  if (this.distance_units == "imperial") {
+    this.div.find(".distance").html(distance.to_miles().round(2) + "&nbsp;miles");
+    this.div.find(".speed").html(segment.speed.to_miles_per_hour().round(2) + "&nbsp;mph");
+    this.div.find(".elevation").html(segment.start.elevation.to_feet().round(0) + "&nbsp;ft");
+  } else {
+    this.div.find(".distance").html(distance.to_kilometers().round(2) + "&nbsp;km");
+    this.div.find(".speed").html(segment.speed.to_kilometers_per_hour().round(2) + "&nbsp;km/h");
+    this.div.find(".elevation").html(segment.start.elevation.round(0) + "&nbsp;m");
+  }
+
+  this.div.css("top", (coords.y - this.div.innerHeight() - 5) + "px");
+  this.div.css("left", (coords.x - this.div.innerWidth() / 2.0) + "px");
+  this.div.css("visibility", "visible");
+};
+
+Tracklog.MapPopupOverlay.prototype.setVisibility = function(visible) {
+  this.div.css("visibility", visible ? "visible" : "hidden");
+};
+
+Tracklog.Map = function(container, tracksFetcher, distanceUnits) {
+  this.map           = null;
+  this.popup         = null;
+  this.tracksFetcher = tracksFetcher;
+  this.distanceUnits = distanceUnits;
+
+  this.setupMapAndPopup(container);
+  this.draw();
+};
+
+Tracklog.Map.prototype.setupMapAndPopup = function(container) {
+  this.map = new google.maps.Map(document.getElementById(container), {
+    mapTypeId: google.maps.MapTypeId.TERRAIN,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+    }
+  });
+
+  this.popup = new Tracklog.MapPopupOverlay({
+    map: this.map,
+    distanceUnits: this.distanceUnits
+  });
+};
+
+Tracklog.Map.prototype.draw = function() {
+  var distance = 0,
+      bounds = new google.maps.LatLngBounds,
+      that = this;
+
+  this.tracksFetcher.tracks.forEach(function(track) {
+    var line,
+        points = [],
+        firstSegment = track.segments[0],
+        lastSegment = track.segments[track.segments.length - 1];
+
+    bounds.extend(firstSegment.start.latlng);
+    points.push(firstSegment.start.latlng);
+
+    new google.maps.Marker({
+      position: firstSegment.start.latlng,
+      map: that.map,
+      icon: "<%= asset_path "start.png" %>"
+    });
+
+    new google.maps.Marker({
+      position: lastSegment.end.latlng,
+      map: that.map,
+      icon: "<%= asset_path "end.png" %>"
+    });
+
+    line = new google.maps.Polyline({
+      strokeColor: "#ff0000",
+      strokeOpacity: 0.6,
+      strokeWidth: 4,
+      map: that.map
+    });
+
+    track.segments.forEach(function(segment) {
+      var transparentLine,
+          segmentDistance;
+
+      points.push(segment.start.latlng);
+      bounds.extend(segment.start.latlng);
+
+      distance += segment.distance;
+      segmentDistance = distance;
+
+      transparentLine = new google.maps.Polyline({
+        strokeOpacity: 0.0,
+        strokeWidth: 4,
+        map: that.map,
+        path: [segment.start.latlng, segment.end.latlng]
+      });
+
+      google.maps.event.addListener(transparentLine, "mouseover", function(ev) {
+        that.popup.setVisibility(true);
+        that.popup.setPosition(ev.latLng, segment, segmentDistance);
+      });
+
+      google.maps.event.addListener(transparentLine, "mousemove", function(ev) {
+        that.popup.setPosition(ev.latLng, segment, segmentDistance);
+      });
+
+      google.maps.event.addListener(transparentLine, "mouseout", function(ev) {
+        that.popup.setVisibility(false);
+      });
+    });
+
+    line.setPath(points);
+    that.map.fitBounds(bounds);
+  });
+};

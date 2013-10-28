@@ -1,0 +1,5 @@
+<%= form_for(@attendence) do |f| %>
+ <%= f.label :'select Vehicle'%>
+ <%= f.collection_select :vehicle_id, Vehicle.all, :id, :vehicle_number %>
+ <%= f.submit %>
+<% end %>

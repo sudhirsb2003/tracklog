@@ -1,0 +1,40 @@
+<%- title "Add a Log" -%>
+<h1>Add a Log</h1>
+
+<%= form_for @log do |f| %>
+  <div class="log-dialog">
+    <div class="row">
+      <div class="label">
+        <label for="log_name">Name</label>
+      </div>
+      <div class="field">
+        <%= f.text_field :name %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label">
+        <label for="log_comment">Comment</label>
+        <p class="markdown">
+          You can use Markdown to format your comment.
+        </p>
+      </div>
+      <div class="field">
+        <%= f.text_area :comment %>
+      </div>
+    </div>
+    <div class="row track-file">
+      <div class="label">
+        <label for="log_track_file">Track file</label>
+      </div>
+      <div class="field">
+        <%= f.file_field :track_file %>
+        <p class="track-help">
+          You can upload more track files later.
+        </p>
+      </div>
+    </div>
+    <div class="row button">
+      <%= f.submit "Create Log" %>
+    </div>
+  </div>
+<% end %>

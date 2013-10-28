@@ -1,0 +1,23 @@
+<%- title "Logs for #{@selected_year}" -%>
+
+<div class="site">
+  <div id="logs-add-log-button">
+    <%= link_to "Add a Log", new_log_path, :class => "button big" %>
+  </div>
+
+  <h1>Logs</h1>
+
+  <%- unless @available_years.empty? -%>
+    <p>
+      <%=raw @available_years.map { |year| year == @selected_year ? year : link_to(year, year_logs_path(:year => year)) }.join(" | ") %>
+    </p>
+  <%- end -%>
+
+  <%- if @logs.empty? -%>
+    <p id="logs-no-logs">
+      You don’t have any logs for <%= @selected_year %>.
+    </p>
+  <%- else -%>
+    <%= render partial: "list" %>
+  <%- end -%>
+</div>

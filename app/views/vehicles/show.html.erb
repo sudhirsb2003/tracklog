@@ -1,0 +1,52 @@
+<%#= image_tag @vehicle.user.photo.url(:small)%>
+<h4> Vehicle Detail </h4>
+<table>
+<tr>
+  <th class="l">Vehicle make:</th>
+  <td><%= @vehicle.vehicle_make %><td>
+</tr>
+<tr>
+  <th class="l">Vehicle number:</th>
+  <td><%= @vehicle.vehicle_number %></td>
+</tr>
+<tr>
+  <th class="l">Driver Name:</th>
+  <td><%= @vehicle.user.name %></td>
+</tr>
+<tr>
+  <th class="l">Regsitration Number:</th>
+  <td><%= @vehicle.vehicle_data.registration_data %><td>
+</tr>
+<tr>
+  <th class="l">Owner Name:</th>
+  <td><%= @vehicle.vehicle_data.owner_name %><td>
+</tr>
+<tr>
+  <th class="l">Vehicle Owner Address:</th>
+  <td><%= @vehicle.vehicle_data.owner_address %><td>
+</tr>
+<tr>
+  <th class="l">Vehicle Detail:</th>
+  <td><%= @vehicle.vehicle_data.vehicle_detail %><td>
+</tr>
+
+</table>
+
+<h4> Passengers List </h4>
+<table style ="width:300px;">
+<% Passenger.where(:vehicle_id => @vehicle.id).each do |p| %>
+ <td><%= image_tag p.user.photo.url(:icon  ) %></td>
+<% end %>
+</table>
+
+
+<%= javascript_include_tag "jquery.tokeninput"%>
+<%= stylesheet_link_tag "token-input-facebook", "token-input"%>
+
+<h4> Add Passengers </h4>
+<%= form_for @passengers do |f| %>
+<%= f.label "Add Passenger" %><br>
+<%= text_field_tag "users","", :id =>"demo-input-facebook-theme" %><br>
+<%= f.hidden_field :vehicle_id, :value => @vehicle.id %>
+<%= f.submit "Add", :class=> "btn btn-info" %>
+<% end %>

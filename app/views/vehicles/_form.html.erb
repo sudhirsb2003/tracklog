@@ -1,0 +1,71 @@
+<%= nested_form_for(@vehicle) do |f| %>
+  <% if @vehicle.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@vehicle.errors.count, "error") %> prohibited this vehicle from being saved:</h2>
+
+      <ul>
+      <% @vehicle.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :vehicle_make %><br>
+    <%= f.text_field :vehicle_make %>
+  </div>
+
+  <div class="field">
+    <%= f.label :vehicle_number %><br>
+    <%= f.text_field :vehicle_number %>
+  </div>
+
+  <div class="field">
+    <%= f.label :"Select Driver" %><br>
+    <%= f.select :user_id, User.find_all_by_profile_title("driver").collect {|p| [ p.name, p.id ] }, {include_blank: 'None'} %>
+  </div><br>
+
+    <%= f.fields_for :vehicle_data do |vehicle_form| %>
+
+    <div class="field">
+      <%= vehicle_form.label :'Registration Number' %><br>
+      <%= vehicle_form.text_field :registration_data %>
+    </div>
+
+    <div class="field">
+      <%= vehicle_form.label :'Owner Name' %><br>
+      <%= vehicle_form.text_field :owner_name %>
+    </div>
+
+    <div class="field">
+      <%= vehicle_form.label :'Owner Address' %><br>
+      <%= vehicle_form.text_area :owner_address %>
+    </div>
+
+    <div class="field">
+      <%= vehicle_form.label :'Vehicle Detail' %><br>
+      <%= vehicle_form.text_area :vehicle_detail %>
+    </div><br><br>
+
+    <%= vehicle_form.fields_for :vehicle_document_photos do |vehicle_document| %>
+
+    <div class="field">
+      <%= vehicle_document.label :'Document Name' %><br>
+      <%= vehicle_document.text_field :name %>
+    </div>
+
+    <div class="field">
+      <table><%= vehicle_document.label :'Upload Document' %><br>
+      <%= vehicle_document.file_field :photo %>
+    </div>
+      <th class="r"><%= vehicle_document.link_to_remove "Remove this Docuement" %></th>
+      <% end %>
+      <th class="r"><%= vehicle_form.link_to_add "Add another Document", :vehicle_document_photos %></th>
+      <% end %></table><br><br>
+
+  <div class="actions">
+    <%= f.submit %><br>
+  </div>
+
+<% end %>

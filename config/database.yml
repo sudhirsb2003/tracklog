@@ -1,0 +1,7 @@
+
+development:
+    adapter: postgresql
+    host: localhost
+    database: tracklog_development
+    username: postgres
+    password: safew

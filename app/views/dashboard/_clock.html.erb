@@ -1,0 +1,30 @@
+<div class="clock" style ="float:right"><script>
+function displayTime() {
+    var elt = document.getElementById("clock");
+    var now = new Date();
+    elt.innerHTML = now.toLocaleTimeString();
+    setTimeout(displayTime, 1000);
+}
+window.onload = displayTime;
+</script>
+<style>
+#clock {
+  font: bold 24pt sans;
+  background: #ddf;
+  padding: 10px;
+  border: solid black 2px;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body>
+<span id="clock"></span>
+</div>
+
+<table style ="width:200px;">
+<tr>
+ <th class ="l">select a round </th>
+</tr>
+ <td class ="l"> <%= link_to "PICKUP", new_attendence_path(:travel_type =>"pick up") %> |
+       <%= link_to "DROP", new_attendence_path(:travel_type => "drop")%></td>
+</table>

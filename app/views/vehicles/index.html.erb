@@ -1,0 +1,28 @@
+<h1>Listing vehicles</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th class="l">Vehicle make</th>
+      <th class="l">Vehicle number</th>
+      <th class="l">Driver Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @vehicles.each do |vehicle| %>
+      <tr>
+        <td><%= link_to vehicle.vehicle_make, vehicle %></td>
+        <td><%= vehicle.vehicle_number %></td>
+        <td><%= vehicle.user.name %></td>
+       <td class="r">
+        <%= link_to 'Edit', edit_vehicle_path(vehicle) %> |
+        <%= link_to 'Destroy', vehicle, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Vehicle', new_vehicle_path %>

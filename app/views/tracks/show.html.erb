@@ -1,0 +1,103 @@
+<%- title @track.display_name -%>
+
+<%= javascript_include_tag "http://maps.google.com/maps/api/js?sensor=false" %>
+<%= javascript_include_tag "//www.google.com/jsapi" %>
+<%= javascript_include_tag "tracks" %>
+
+<script>
+  google.load("visualization", "1", { packages: ["corechart"] });
+
+  google.setOnLoadCallback(function() {
+    new Tracklog.TracksFetcher("<%=j log_track_path(@track.log, @track, :json) %>", function(tracksFetcher) {
+      new Tracklog.Map("track-map", tracksFetcher, "<%= current_user.distance_units %>");
+      new Tracklog.DistanceElevationPlot("track-distance-elevation-plot", tracksFetcher, "<%= current_user.distance_units %>");
+    });
+  });
+</script>
+
+<div id="track-header">
+  <ul>
+    <li><%= link_to "Export", log_path(@track.log, :format => :gpx), :class => "button" %>
+  </ul>
+
+  <h1 id="track-name" data-default-name="<%= "Track #{@track.id}" %>"><%= @track.display_name %></h1>
+  <p class="subtitle"><%= link_to @track.log.name, @track.log %></p>
+</div>
+
+<div id="track-side">
+  <h3>Details</h3>
+
+  <div id="track-details" class="box">
+    <dl>
+      <dt>Start</dt>
+      <dd><%= @track.start_time ? l(@track.start_time, :format => "%d.%m.%Y %H:%M") : "—" %></dd>
+      <dt>End</dt>
+      <dd><%= @track.end_time ? l(@track.end_time, :format => "%d.%m.%Y %H:%M") : "—" %></dd>
+      <dt>Duration</dt>
+      <dd><%=format_duration @track.duration %></dd>
+      <dt>Moving</dt>
+      <dd><%=format_duration @track.moving_time %></dd>
+      <dt>Stopped</dt>
+      <dd><%=format_duration @track.stopped_time %></dd>
+    </dl>
+
+    <dl>
+      <dt>Distance</dt>
+      <dd><%=format_distance @track.distance %></dd>
+      <dt>∅ Speed</dt>
+      <dd><%=format_speed @track.overall_average_speed %></dd>
+      <dt>Mov. ∅ Speed</dt>
+      <dd><%=format_speed @track.moving_average_speed %></dd>
+      <dt>Max. Speed</dt>
+      <dd><%=format_speed @track.max_speed %></dd>
+    </dl>
+
+    <dl>
+      <dt>Ascent</dt>
+      <dd><%=format_elevation @track.ascent %></dd>
+      <dt>Descent</dt>
+      <dd><%=format_elevation @track.descent %></dd>
+      <dt>Min. Elevation</dt>
+      <dd><%=format_elevation @track.min_elevation %></dd>
+      <dt>Max. Elevation</dt>
+      <dd><%=format_elevation @track.max_elevation %></dd>
+    </dl>
+
+    <dl>
+      <dt>Trackpoints</dt>
+      <dd><%= @track.trackpoints.count %></dd>
+    </dl>
+  </div>
+
+  <h3>Actions</h3>
+
+  <div id="track-actions" class="box">
+    <ul>
+      <li><%= link_to "Show Trackpoints", log_track_trackpoints_path(@track.log, @track) %>
+      <li><%= link_to "Transfer Track", transfer_log_track_path(@track.log, @track) %>
+      <li><%= link_to "Rename Track", nil, :id => "track-rename-link" %>
+      <%- if @track.log.tracks.size > 1 -%>
+        <li><%= link_to "Delete Track", log_track_path(@track.log, @track), :method => :delete, :confirm => "Do you really want to delete this track?" %>
+      <%- end -%>
+    </ul>
+  </div>
+</div>
+
+<div id="track-main">
+  <div id="track-map"></div>
+
+  <h2>Elevation Profile</h2>
+  <div id="track-distance-elevation-plot"></div>
+</div>
+
+<div id="track-rename-pane" class="site-overlay">
+  <div class="box">
+    <div class="close">×</div>
+    <h2>Rename Track</h2>
+    <div class="content">
+      <%= form_for log_track_path(@track.log, @track), :method => :put, :remote => true do %>
+        <%= text_field :track, :name %>
+      <% end %>
+    </div>
+  </div>
+</div>
