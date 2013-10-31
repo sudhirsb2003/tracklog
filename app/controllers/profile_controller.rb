@@ -4,7 +4,7 @@ class ProfileController < ApplicationController
   before_filter :authenticate
 
   def index
-    @user = current_user
+    @profile = User.find(params[:user_id])
   end
 
   def update

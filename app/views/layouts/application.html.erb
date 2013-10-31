@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title><%= yield(:title) %> – Tracklog</title>
-    <script>var Tracklog = {};</script>
     <%= stylesheet_link_tag "application" %>
     <%= javascript_include_tag "application" %>
+    <link href="/assets/favicon.ico" rel="shortcut icon" />
     <%= csrf_meta_tag %>
   </head>
   <body>
@@ -17,7 +17,7 @@
         </p>
         <ul>
           <li><%= link_to "Dashboard", dashboard_path %>
-          <li><%= link_to "My Profile", profile_path %>
+          <li><%= link_to "My Profile", profile_path(:user_id => current_user) %>
           <%- if current_user.is_admin? -%>
             <li><%= link_to 'Vehicles', vehicles_path %></li>
             <li><%= link_to "Admin", admin_path %>

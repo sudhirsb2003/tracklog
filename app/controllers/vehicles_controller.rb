@@ -9,7 +9,8 @@ class VehiclesController < ApplicationController
   # GET /vehicles/1
   def show
    @passengers = Passenger.new
-   @passenger = Passenger.all
+   #@passenger = Passenger.all
+   @passenger = Passenger.where(:vehicle_id => @vehicle.id).order(:user_id).includes(:user)
   end
 
   # GET /vehicles/new

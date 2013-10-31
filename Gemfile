@@ -11,6 +11,11 @@ gem 'pg'
 gem 'workflow'
 gem 'nested_form'
 gem 'faker'
+gem 'bullet', group: :development
+gem 'friendly_id', github: 'mbehrendt/friendly_id', branch: :rails4
+
+
+
 group :development, :test do
   gem "better_errors"
   gem "binding_of_caller"

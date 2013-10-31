@@ -10,7 +10,7 @@
     </tr>
     </thead>
     <tr>
-  <% Vehicle.all.each do |v| %>
+  <% @vehicle.each do |v| %>
     <tbody>
       <td><%= link_to v.vehicle_make, v %></td>
       <td><%= v.vehicle_number %></td>
@@ -32,9 +32,9 @@
   </tr>
 
   <tr>
-  <% User.find_all_by_profile_title('driver').each do |d| %>
+  <% @profile.each do |d| %>
     <tbody>
-      <td><%= link_to d.name, profile_path %></td>
+      <td><%= link_to d.name, profile_path(:user_id => d) %></td>
     </tbody>
     </tr>
   <% end %>
@@ -42,19 +42,11 @@
 </div>
 
 <% else %>
+<div class ="driver" style="margin-top:30px;">
  <%= render "clock" %><br>
 
 <p style ="font-size:11px;color:#888888">
  <b>Welcome ! <%= current_user.name %></b>
-
- <%= current_user.vehicle %>
-
 </p>
-
-
-
-
-
-
-
+</div>
 <% end %>

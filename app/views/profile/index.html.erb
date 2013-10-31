@@ -2,45 +2,45 @@
 
   <div class="form" style ="margin-top:70px;">
     <div class ="image" style="display:block;padding:10px;border:1px solid green;background:#FFF;width:150px;border-radius:5px;">
-      <%= image_tag current_user.photo.url(:small) %>
-      <h4><i><%= current_user.name %></i></h4></div>
+      <%= image_tag @profile.photo.url(:thumb) %>
+      <h4><i><%= @profile.name %></i></h4></div>
 
         <div class ="data" style="margin-top:-200px;margin-left:200px;">
             <table>
             <thead>
             <tr>
             <th class="l"> Address </th>
-            <td><%= current_user.address %><td>
+            <td><%= @profile.address %><td>
             </tr>
             <tr>
             <th class="l"> Blood Group </th>
-            <td><%= current_user.blood_group %><td>
+            <td><%= @profile.blood_group %><td>
             </tr>
             <th class="l"> Contact Number </th>
-            <td><%= current_user.contact_no %><td>
+            <td><%= @profile.contact_no %><td>
             <tr>
             <th class="l"> Emergency Contact Number </th>
-            <td><%= current_user.emergency_contact_no %><td>
+            <td><%= @profile.emergency_contact_no %><td>
             </tr>
             <tr>
             <th class="l"> Family Doctor Name </th>
-            <td><%= current_user.family_doctor_name %><td>
+            <td><%= @profile.family_doctor_name %><td>
             </tr>
             <tr>
             <th class="l"> Profile Title </th>
-            <td><%= current_user.profile_title %><td>
+            <td><%= @profile.profile_title %><td>
             </tr>
             <th class="l"> Reference Contact Number </th>
-            <td> <%= current_user.ref_number_1 %><td>
+            <td> <%= @profile.ref_number_1 %><td>
             </tr>
             <tr>
             <th class="l"> Reference Contact Number </th>
-            <td><%= current_user.ref_number_2 %></td>
+            <td><%= @profile.ref_number_2 %></td>
             </tr>
-            <td class="r"><%= link_to "Edit", edit_admin_user_path(current_user) %></td>
+            <td class="r"><%= link_to "Edit", edit_admin_user_path(@profile) %></td>
         </div>
 
-      <% if current_user.is_admin? %>
+      <% if @profile.is_admin? %>
        <th><%= link_to "Add Vehicle", new_vehicle_path %></th>
       <% end %>
    </div>            </table>

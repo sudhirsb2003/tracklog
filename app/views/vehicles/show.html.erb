@@ -34,8 +34,8 @@
 
 <h4> Passengers List </h4>
 <table style ="width:300px;">
-<% Passenger.where(:vehicle_id => @vehicle.id).each do |p| %>
- <td><%= image_tag p.user.photo.url(:icon  ) %></td>
+<% @passenger.each do |p| %>
+ <td><%= link_to p.user.name, profile_path(:user_id => p.user) %></td>
 <% end %>
 </table>
 
@@ -45,8 +45,8 @@
 
 <h4> Add Passengers </h4>
 <%= form_for @passengers do |f| %>
-<%= f.label "Add Passenger" %><br>
-<%= text_field_tag "users","", :id =>"demo-input-facebook-theme" %><br>
-<%= f.hidden_field :vehicle_id, :value => @vehicle.id %>
-<%= f.submit "Add", :class=> "btn btn-info" %>
+	<%= f.label "Add Passenger" %><br>
+	<%= text_field_tag "users","", :id =>"demo-input-facebook-theme" %><br>
+	<%= f.hidden_field :vehicle_id, :value => @vehicle.id %>
+	<%= f.submit "Add", :class=> "btn btn-info" %>
 <% end %>

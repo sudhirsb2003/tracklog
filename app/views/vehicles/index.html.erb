@@ -14,7 +14,7 @@
       <tr>
         <td><%= link_to vehicle.vehicle_make, vehicle %></td>
         <td><%= vehicle.vehicle_number %></td>
-        <td><%= vehicle.user.name %></td>
+        <td><%= vehicle.user.name %> (<span style="color:green"><%= vehicle.user.profile_title %></span>)</td>
        <td class="r">
         <%= link_to 'Edit', edit_vehicle_path(vehicle) %> |
         <%= link_to 'Destroy', vehicle, method: :delete, data: { confirm: 'Are you sure?' } %>

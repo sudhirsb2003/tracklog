@@ -2,10 +2,18 @@ class AttendencesController < ApplicationController
 
   def new
     @attendence = Attendence.new
+    @a = Attendence.where("DATE(created_at) = ? and travel_type = ?", Date.today, "pick up")
   end
 
    def create
-     @attendence = Attendence.create(:travel_type => params[attendence_params])
+     @vehicle = Vehicle.find(params[:vehicle_id])
+     travel_type = params[:travel_type]
+     @attendence = Attendence.create( :vehicle_id => @vehicle.id,
+                                      :user_id => @vehicle.user.id,
+                                      :pick_up_point_id => 1,
+                                      :travel_type => travel_type)
+     @attendence.save
+     redirect_to new_attendence_path, :notice => "pending"
    end
 
   private

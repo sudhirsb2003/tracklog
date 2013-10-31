@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
 
   validates_presence_of :address, :blood_group, :contact_no, :emergency_contact_no, :profile_title
 
-  belongs_to :vehicle
+  has_one :vehicle
+  belongs_to :attendence
 
   TITLE = %w(driver employee)
 
@@ -19,7 +20,7 @@ class User < ActiveRecord::Base
                     :url  => "/assets/products/:id/:style/:basename.:extension",
                     :path => ":rails_root/public/assets/products/:id/:style/:basename.:extension"
 
-  validates_attachment_presence :photo
+  #validates_attachment_presence :photo
   validates_attachment_size :photo, :less_than => 5.megabytes
   validates_attachment_content_type :photo, :content_type => ['image/jpeg', 'image/png']
 

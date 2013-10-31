@@ -1,5 +1,52 @@
-<%= form_for(@attendence) do |f| %>
- <%= f.label :'select Vehicle'%>
- <%= f.collection_select :vehicle_id, Vehicle.all, :id, :vehicle_number %>
- <%= f.submit %>
+<style>
+  .photo{ float:left;background:silver;width:150px;padding:4px;border-radius:4px;}
+</style>
+  <p class="photo"><%= image_tag current_user.photo.url(:thumb) %></p>
+<table>
+<tr>
+	<th class ="l">Driver Name :</th>
+	<td><%= current_user.display_name %></td>
+</tr>
+
+<tr>
+	<th class ="l">Vehicle Detail: </th>
+	<td><%= current_user.vehicle.vehicle_number %></td>
+</tr>
+
+<tr>
+	<th class ="l">Vehicle Make : </th>
+	<td><%= current_user.vehicle.vehicle_make %></td>
+</tr>
+
+</table>
+<h1> attendence </h1>
+<table>
+   <thead>
+    <tr>
+      <th class ="l"> Employee Make </th>
+      <th class ="l"> Action </th>
+      <th class ="l"> Status </th>
+    </tr>
+    </thead>
+    <tr>
+     <% @vehicle = Vehicle.where(:id => current_user.vehicle).first %>
+     <% @vehicle.passengers.each do |p| %>
+    <tbody>
+      <td><%= link_to p.user.name, profile_path(:user_id => p.user) %></td>
+      <td><%= link_to "board", attendences_path(:vehicle_id => @vehicle, :travel_type => params[:travel_type]), :method => :post %></td>
+				<% if @a.present? %>
+				<% @a.each do |a| %>
+				<td><%= a.status %></td>
+				<% end %>
+				<% else %>
+				<td> Pending </td>
+				<% end %>
+    </tbody>
+  </tr>
+<% end %>
+</table>
+<% if @a.present? %>
+	<% @a.each do |a| %>
+   <%= a.vehicle.inspect%>
+	<% end %>
 <% end %>
