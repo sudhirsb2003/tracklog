@@ -1,52 +1,113 @@
-<%#= image_tag @vehicle.user.photo.url(:small)%>
-<h4> Vehicle Detail </h4>
-<table>
-<tr>
-  <th class="l">Vehicle make:</th>
-  <td><%= @vehicle.vehicle_make %><td>
-</tr>
-<tr>
-  <th class="l">Vehicle number:</th>
-  <td><%= @vehicle.vehicle_number %></td>
-</tr>
-<tr>
-  <th class="l">Driver Name:</th>
-  <td><%= @vehicle.user.name %></td>
-</tr>
-<tr>
-  <th class="l">Regsitration Number:</th>
-  <td><%= @vehicle.vehicle_data.registration_data %><td>
-</tr>
-<tr>
-  <th class="l">Owner Name:</th>
-  <td><%= @vehicle.vehicle_data.owner_name %><td>
-</tr>
-<tr>
-  <th class="l">Vehicle Owner Address:</th>
-  <td><%= @vehicle.vehicle_data.owner_address %><td>
-</tr>
-<tr>
-  <th class="l">Vehicle Detail:</th>
-  <td><%= @vehicle.vehicle_data.vehicle_detail %><td>
-</tr>
+<style>
+.multipleimages{background :transparent;width:auto;padding:20px;border:0px solid gray;border-radius:4px;}
+.thumb{
+   list-style: none;
+   border-radius: 10px;
+   padding: 0 20px;
+   display: inline-table;
+   background: #e0e0e0;
+   padding:10px;}
 
-</table>
+.form{ margin-top:50px}
+.left {
+    float: left;
+    width: 65%;
+    padding:20px;
+}
 
-<h4> Passengers List </h4>
-<table style ="width:300px;">
-<% @passenger.each do |p| %>
- <td><%= link_to p.user.name, profile_path(:user_id => p.user) %></td>
-<% end %>
-</table>
+.right {
+    padding:20px;
+    margin-left: 35%;
+}
 
 
-<%= javascript_include_tag "jquery.tokeninput"%>
-<%= stylesheet_link_tag "token-input-facebook", "token-input"%>
+</style>
+<br><br>
 
-<h4> Add Passengers </h4>
-<%= form_for @passengers do |f| %>
-	<%= f.label "Add Passenger" %><br>
-	<%= text_field_tag "users","", :id =>"demo-input-facebook-theme" %><br>
-	<%= f.hidden_field :vehicle_id, :value => @vehicle.id %>
-	<%= f.submit "Add", :class=> "btn btn-info" %>
-<% end %>
+<div class="left">
+    <p>
+        <%= image_tag @vehicle.user.photo.url(:small)%>
+        <h4> Vehicle Detail </h4>
+
+        <table>
+        <tr>
+          <th class="l">Vehicle make:</th>
+          <td><%= @vehicle.vehicle_make %><td>
+        </tr>
+        <tr>
+          <th class="l">Vehicle number:</th>
+          <td><%= @vehicle.vehicle_number %></td>
+        </tr>
+        <tr>
+          <th class="l">Driver Name:</th>
+          <td><%= @vehicle.user.name %></td>
+        </tr>
+          <tr>
+           <th class="l"> Start point </th>
+           <td><%= @vehicle.start_point.address %></td>
+          </tr>
+        <tr>
+         <th class ="l">End point </th>
+         <td><%= @vehicle.end_point.address %></td>
+        </tr>
+
+        <tr>
+          <th class="l">Regsitration Number:</th>
+          <td><%= @vehicle.vehicle_data.registration_data %><td>
+        </tr>
+        <tr>
+          <th class="l">Owner Name:</th>
+          <td><%= @vehicle.vehicle_data.owner_name %><td>
+        </tr>
+        <tr>
+          <th class="l">Vehicle Owner Address:</th>
+          <td><%= @vehicle.vehicle_data.owner_address %><td>
+        </tr>
+        <tr>
+          <th class="l">Vehicle Detail:</th>
+          <td><%= @vehicle.vehicle_data.vehicle_detail %><td>
+        </tr>
+
+        </table>
+
+        <h4> Passengers List </h4>
+        <table style ="width:300px;">
+        <% @passenger.each do |p| %>
+         <td><%= link_to p.user.name, profile_path(:user_id => p.user) %></td>
+        <% end %>
+        </table>
+
+
+        <%= javascript_include_tag "jquery.tokeninput"%>
+        <%= stylesheet_link_tag "token-input-facebook", "token-input"%>
+
+        <h4> Add Passengers </h4>
+        <%= form_for @passengers do |f| %>
+	        <%= f.label "Add Passenger" %><br>
+	        <%= text_field_tag "users","", :id =>"demo-input-facebook-theme" %><br>
+	        <%= f.hidden_field :vehicle_id, :value => @vehicle.id %>
+	        <%= f.submit "Add", :class=> "btn btn-info" %>
+        <% end %>
+
+    </p>
+
+
+<%= gmaps({ "direction" => {"data"    => { "from" => "#{@vehicle.start_point.address}", "to" => "#{@vehicle.end_point.address}"} ,
+            "options" => {"waypoints" => ["boriwali","andheri"],
+                          "travelmode" => ["DRIVING"],
+                          "unitSystem" => ["IMPERIAL"],
+            "display_panel" => true, "panel_id" => "instructions"} } } ) %>
+
+
+</div>
+
+<div class="right">
+  <div class="multipleimages">
+  <% @vehicle.vehicle_data.vehicle_document_photos.each do |d| %>
+    <div class="thumb">
+      <h3><%= d.name %></h3>
+      <%= link_to image_tag(d.photo.url(:thumb)) %>
+    </div>
+  <% end %>
+  </div>
+</div>

@@ -33,20 +33,15 @@
      <% @vehicle.passengers.each do |p| %>
     <tbody>
       <td><%= link_to p.user.name, profile_path(:user_id => p.user) %></td>
-      <td><%= link_to "board", attendences_path(:vehicle_id => @vehicle, :travel_type => params[:travel_type]), :method => :post %></td>
-				<% if @a.present? %>
-				<% @a.each do |a| %>
-				<td><%= a.status %></td>
-				<% end %>
-				<% else %>
-				<td> Pending </td>
-				<% end %>
+     <% if Attendence.nil? %>
+      <% if Attendence.all.last.user_id == p.user.id  && Attendence.all.last.status == 'pending' %>
+       <td> Pending </td>
+       <td><%= link_to "Enter your Employee id:", edit_attendence_path(Attendence.all.last) %></td>
+      <% else %>
+       <td><%= link_to "board", attendences_path(:user_id => p.user.id, :vehicle_id => @vehicle, :travel_type => params[:travel_type]), :method => :post %></td>
+       <% end %>
     </tbody>
   </tr>
 <% end %>
-</table>
-<% if @a.present? %>
-	<% @a.each do |a| %>
-   <%= a.vehicle.inspect%>
-	<% end %>
 <% end %>
+</table>

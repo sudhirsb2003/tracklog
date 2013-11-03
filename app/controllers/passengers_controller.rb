@@ -35,7 +35,7 @@ class PassengersController < ApplicationController
      user_lists << @passenger.user.name
  	  end
      if @passenger.save
-    	  redirect_to vehicles_path, notice: 'successfully added.'
+    	  redirect_to vehicle_path(@passenger.vehicle), notice: 'successfully added.'
   	 else
    			redirect_to vehicles_path, notice: 'something went wrong !'
      end

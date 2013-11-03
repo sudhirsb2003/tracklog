@@ -1,1 +1,32 @@
 //= require_tree .
+
+
+div.row {margin:10px 0;padding:2px 0;width:100%;overflow:hidden;}
+div.row div {margin-right:30px!important;}
+div.row div {float:left;}
+div.calendar_date_select, div.calendar_date_select div {margin:0 !important;float:none !important;}
+
+input, textarea {
+	padding:2px;
+}
+
+div.row ul li { float:left;margin:5px 15px; }
+
+ul.options {
+	padding:0;
+	margin:0;
+	list-style:none;
+	overflow:hidden;
+}
+ul.options li {
+	margin:5px 0;
+}
+
+ul.options label {
+	color:#333;
+	margin-right:10px;
+}
+
+.field_name {
+	display:block;
+}

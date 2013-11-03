@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
 
   def index
    @attendence = Attendence.new
-   @vehicle = Vehicle.order(:name).includes(:user)
+   @vehicle = Vehicle.order(:vehicle_make).includes(:user)
    @profile = User.find_all_by_profile_title('driver')
   end
 

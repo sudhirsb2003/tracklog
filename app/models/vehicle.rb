@@ -6,9 +6,13 @@ class Vehicle < ActiveRecord::Base
   has_many :passengers
   has_one :vehicle_data
   belongs_to :attendence
-  accepts_nested_attributes_for :vehicle_data, :reject_if => :all_blank, :allow_destroy => true
-  validates_associated :vehicle_data
+  has_one :start_point
+  has_one :end_point
 
+  accepts_nested_attributes_for :vehicle_data, :reject_if => :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :start_point, :allow_destroy => true
+  accepts_nested_attributes_for :end_point, :allow_destroy => true
+  validates_associated :vehicle_data
 
   extend FriendlyId
   friendly_id :vehicle_make_and_vehicle_number, use: :slugged

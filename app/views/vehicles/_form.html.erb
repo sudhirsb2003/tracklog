@@ -1,3 +1,7 @@
+<style>
+ .form{background:white;padding:20px;}
+</style>
+<div class = "form">
 <%= nested_form_for(@vehicle) do |f| %>
   <% if @vehicle.errors.any? %>
     <div id="error_explanation">
@@ -11,61 +15,109 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :vehicle_make %><br>
-    <%= f.text_field :vehicle_make %>
-  </div>
+<table><tr>
+<th class ="l">
+  <div class="row">
+    <div>
+      <label for="vehicle_make" class="field_name">Vehicle make</label>
+      <%= f.text_field :vehicle_make %>
+    </div></th>
 
-  <div class="field">
-    <%= f.label :vehicle_number %><br>
-    <%= f.text_field :vehicle_number %>
-  </div>
+   <th class ="l">
+   <div class="field_name">
+      <label for="vehicle_number" class="field_name">Vehicle Number</label>
+      <%= f.text_field :vehicle_number %>
+    </div></th>
+ </div></tr>
 
-  <div class="field">
+
+<%= f.fields_for :start_point do |start_point| %>
+<th class ="l">
+  <div class="row">
+    <div>
+      <label for="name" class="field_name">Source Address</label>
+      <%= start_point.text_area :address %>
+    </div></th>
+<% end %>
+
+    <%= f.fields_for :end_point do |end_point| %>
+   <th class ="l">
+   <div class="field_name">
+      <label for="address" class="field_name">Destination Address</label>
+      <%= end_point.text_area :address %>
+    </div></th>
+<% end %>
+
+  <tr><th class ="l"><div class="row">
+  <div class="field_name">
     <%= f.label :"Select Driver" %><br>
     <%= f.select :user_id, User.find_all_by_profile_title("driver").collect {|p| [ p.name, p.id ] }, {include_blank: 'None'} %>
   </div><br>
+</div></th></tr>
+</table>
 
+<h2> Registration Detail </h2>
+
+<table>
     <%= f.fields_for :vehicle_data do |vehicle_form| %>
-
-    <div class="field">
-      <%= vehicle_form.label :'Registration Number' %><br>
-      <%= vehicle_form.text_field :registration_data %>
+    <tr><th class ="l">
+    <div class="row">
+      <div class="field_name">
+        <label for="Registration Number" class="field_name">Registration Number</label>
+        <%= vehicle_form.text_field :registration_data %>
+      </div>
+      <div class="field_name">
+        <%= vehicle_form.label :'Owner Name' %><br>
+        <%= vehicle_form.text_field :owner_name %>
+      </div>
     </div>
+    </th></tr>
 
-    <div class="field">
-      <%= vehicle_form.label :'Owner Name' %><br>
-      <%= vehicle_form.text_field :owner_name %>
+    <tr><th class ="l">
+    <div class="row">
+      <div>
+      <div class="field_name">
+        <label for="Owner Address" class="field_name">Owner Address</label>
+        <%= vehicle_form.text_area :owner_address %>
+      </div>
+      <div class="field_name">
+        <%= vehicle_form.label :'Vehicle Detail' %><br>
+        <%= vehicle_form.text_area :vehicle_detail %>
+      </div><br><br>
+     </div>
     </div>
+    </th></tr>
+    </table>
 
-    <div class="field">
-      <%= vehicle_form.label :'Owner Address' %><br>
-      <%= vehicle_form.text_area :owner_address %>
+<h2> Registration Document Detail </h2>
+
+      <%= vehicle_form.fields_for :vehicle_document_photos do |vehicle_document| %>
+
+    <div class="row">
+    <table>
+<tr><th class ="l">
+      <div class="field_name">
+        <%= vehicle_document.label :'Document Name' %><br>
+        <%= vehicle_document.text_field :name %>
+      </div>
+
+      <div class="field_name">
+
+       <%= vehicle_document.label :'Upload Document' %><br>
+       <%= vehicle_document.file_field :photo %>
+
+       </div>
+</th></tr>
+  <th class="l"><%= vehicle_document.link_to_remove "Remove this Docuement" %>   <% end %> </th>
+</table>
+</div>
+
+<h3><%= vehicle_form.link_to_add "Add another Document", :vehicle_document_photos %></h3>
+  <% end %>
+<br><br>
+
+    <div class="field_name">
+      <%= f.submit %><br>
     </div>
-
-    <div class="field">
-      <%= vehicle_form.label :'Vehicle Detail' %><br>
-      <%= vehicle_form.text_area :vehicle_detail %>
-    </div><br><br>
-
-    <%= vehicle_form.fields_for :vehicle_document_photos do |vehicle_document| %>
-
-    <div class="field">
-      <%= vehicle_document.label :'Document Name' %><br>
-      <%= vehicle_document.text_field :name %>
-    </div>
-
-    <div class="field">
-      <table><%= vehicle_document.label :'Upload Document' %><br>
-      <%= vehicle_document.file_field :photo %>
-    </div>
-      <th class="r"><%= vehicle_document.link_to_remove "Remove this Docuement" %></th>
-      <% end %>
-      <th class="r"><%= vehicle_form.link_to_add "Add another Document", :vehicle_document_photos %></th>
-      <% end %></table><br><br>
-
-  <div class="actions">
-    <%= f.submit %><br>
-  </div>
 
 <% end %>

@@ -50,3 +50,12 @@
                              :vehicle_number => vehicle_number.shift,
                              :user_id => driver.shift.id )
  end
+
+
+ 28.times do |n|
+  vehicle_data = VehicleData.create!(:registration_data => "ABDGCYDUD23455GHY#{n+1}",
+                                      :purchase_date_and_year => Date.today,
+                                      :owner_name => Faker::Name.name,
+                                      :owner_address => Faker::Address.street_address,
+                                      :vehicle_id => "#{n+1}" )
+end

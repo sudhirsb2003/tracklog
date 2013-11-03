@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131030055521) do
+ActiveRecord::Schema.define(version: 20131103041219) do
 
   create_table "attendences", force: true do |t|
     t.integer  "user_id"
@@ -22,6 +22,17 @@ ActiveRecord::Schema.define(version: 20131030055521) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "travel_type"
+  end
+
+  create_table "end_points", force: true do |t|
+    t.string   "name"
+    t.text     "address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "vehicle_id"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "gmaps"
   end
 
   create_table "logs", force: true do |t|
@@ -51,6 +62,17 @@ ActiveRecord::Schema.define(version: 20131030055521) do
     t.text     "address"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "start_points", force: true do |t|
+    t.string   "name"
+    t.text     "address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "vehicle_id"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "gmaps"
   end
 
   create_table "tags", force: true do |t|
@@ -147,6 +169,10 @@ ActiveRecord::Schema.define(version: 20131030055521) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
+    t.text     "source_address"
+    t.text     "destination_address"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
 end

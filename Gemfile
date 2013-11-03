@@ -13,7 +13,7 @@ gem 'nested_form'
 gem 'faker'
 gem 'bullet', group: :development
 gem 'friendly_id', github: 'mbehrendt/friendly_id', branch: :rails4
-
+gem 'gmaps4rails'
 
 
 group :development, :test do
